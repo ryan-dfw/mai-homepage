@@ -529,7 +529,7 @@ button {
 /* Schedule / Cal.com */
 .cal-page {
   width: 100%;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100dvh - 70px);
   padding-top: 70px;
   display: flex;
   justify-content: center;
@@ -537,7 +537,7 @@ button {
 }
 .cal-page iframe {
   width: 100% !important;
-  min-height: calc(100vh - 70px) !important;
+  min-height: calc(100dvh - 70px) !important;
   border: 0 !important;
 }
 .cal-page > div {
@@ -561,8 +561,29 @@ button {
   margin-bottom: 1rem;
 }
 
-/* Hover dim */
+/* Gallery thumbnail — skeleton shimmer while loading */
+.galleryimage {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(240, 220, 220, 0.03) 20%,
+      rgba(240, 220, 220, 0.09) 40%,
+      rgba(240, 220, 220, 0.03) 60%
+    ),
+    rgba(14, 8, 8, 0.6);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+}
+.galleryimage.loaded {
+  animation: none;
+  background: transparent;
+}
 .galleryimage:hover img { opacity: 0.8; }
+
+@keyframes skeleton-shimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
+}
 
 @media (min-width: 1000px) {
   .gallery-page { max-width: 80vw; margin-left: auto; margin-right: auto; }
