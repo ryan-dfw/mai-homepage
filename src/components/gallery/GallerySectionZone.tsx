@@ -1,13 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import GalleryThumbnail from './GalleryThumbnail'
+import { cloudinaryThumb } from '../../cloudinary'
 
 type Image = {
-  src: string
-  thumbSrc: string
+  id: string
+  url: string
   alt: string
   aspectRatio: number
-  desktopOffset: number
-  mobileOffset: number
 }
 
 type Props = {
@@ -15,6 +14,10 @@ type Props = {
   layout: 'portrait' | 'landscape' | 'mixed'
   startIndex: number
   onOpen: (index: number) => void
+  onDelete: (imageId: string) => void
+  onReplace: (imageId: string, file: File) => Promise<void>
+  isImageReplacing: (imageId: string) => boolean
+  onReorder: (fromIndex: number, toIndex: number) => void
 }
 
 type Row = {
@@ -23,14 +26,23 @@ type Row = {
   height: number
 }
 
-/** Greedy justified layout — fills each row to exactly containerWidth with no gaps. */
+/**
+ * Greedy justified layout — fills each row to exactly containerWidth with no gaps.
+ *
+ * Edge case: a row with few images and a low total aspect ratio (e.g. a lone
+ * portrait photo left over as the last row) would need to stretch far taller
+ * than targetRowHeight to reach the full container width. Capping the row
+ * height at maxRowHeight avoids absurdly tall tiles — that row just won't
+ * reach the edge, which is a much better tradeoff than a blown-up photo.
+ */
 function computeRows(
   images: Image[],
   containerWidth: number,
   targetRowHeight: number,
   maxPerRow: number,
   minPerRow: number,
-  gap: number
+  gap: number,
+  maxRowHeight: number
 ): Row[] {
   if (containerWidth <= 0 || images.length === 0) return []
 
@@ -58,7 +70,7 @@ function computeRows(
     const count = end - start
     const gapsWidth = (count - 1) * gap
     const availableWidth = containerWidth - gapsWidth
-    const rowHeight = availableWidth / totalAspect
+    const rowHeight = Math.min(availableWidth / totalAspect, maxRowHeight)
     const widths = images.slice(start, end).map(img => img.aspectRatio * rowHeight)
 
     rows.push({
@@ -73,9 +85,11 @@ function computeRows(
   return rows
 }
 
-export default function GallerySectionZone({ images, layout, startIndex, onOpen }: Props) {
+export default function GallerySectionZone({ images, layout, startIndex, onOpen, onDelete, onReplace, isImageReplacing, onReorder }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const el = containerRef.current
@@ -91,8 +105,14 @@ export default function GallerySectionZone({ images, layout, startIndex, onOpen 
   const TARGET_HEIGHT = 280
   const MAX_PER_ROW = 5
   const MIN_PER_ROW = 2
+  const MAX_ROW_HEIGHT = TARGET_HEIGHT * 1.5
 
-  const rows = computeRows(images, containerWidth, TARGET_HEIGHT, MAX_PER_ROW, MIN_PER_ROW, GAP)
+  const rows = computeRows(images, containerWidth, TARGET_HEIGHT, MAX_PER_ROW, MIN_PER_ROW, GAP, MAX_ROW_HEIGHT)
+
+  const resetDrag = () => {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
 
   return (
     <div
@@ -110,15 +130,26 @@ export default function GallerySectionZone({ images, layout, startIndex, onOpen 
         >
           {row.indices.map((imgIdx, ii) => (
             <GalleryThumbnail
-              key={images[imgIdx].src}
-              src={images[imgIdx].src}
-              thumbSrc={images[imgIdx].thumbSrc}
+              key={images[imgIdx].id}
+              thumbSrc={cloudinaryThumb(images[imgIdx].url, 600)}
               alt={images[imgIdx].alt}
               width={row.widths[ii]}
               height={row.height}
-              desktopOffset={images[imgIdx].desktopOffset}
-              mobileOffset={images[imgIdx].mobileOffset}
               onClick={() => onOpen(startIndex + imgIdx)}
+              onDelete={() => onDelete(images[imgIdx].id)}
+              onReplace={file => onReplace(images[imgIdx].id, file)}
+              replacing={isImageReplacing(images[imgIdx].id)}
+              draggable
+              isDragOver={dragOverIndex === imgIdx && dragIndex !== imgIdx}
+              onDragStart={() => setDragIndex(imgIdx)}
+              onDragOver={e => { e.preventDefault(); setDragOverIndex(imgIdx) }}
+              onDragLeave={() => setDragOverIndex(prev => (prev === imgIdx ? null : prev))}
+              onDrop={e => {
+                e.preventDefault()
+                if (dragIndex !== null && dragIndex !== imgIdx) onReorder(dragIndex, imgIdx)
+                resetDrag()
+              }}
+              onDragEnd={resetDrag}
             />
           ))}
         </div>

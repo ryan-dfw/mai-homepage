@@ -1,10 +1,11 @@
-import { content } from '../data/content'
+import { footer as footerContent } from '../data/pages/footer'
+import Editable from './Editable'
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <p className="footer-tagline">{content.footer.tagline}</p>
-      <p className="footer-email">{content.footer.email}</p>
+      <Editable as="p" className="footer-tagline" id="footer.tagline" defaultValue={footerContent.tagline} />
+      <Editable as="p" className="footer-email" id="footer.email" defaultValue={footerContent.email} />
     </footer>
   )
 }

@@ -1,38 +1,43 @@
-import { Link } from 'react-router-dom'
-import { content } from '../data/content'
+import { home } from '../data/pages/home'
+import { homeLinks } from '../data/homeLinks'
+import Editable from '../components/Editable'
+import EditableCtaLink from '../components/EditableCtaLink'
+import EditableImageSlot from '../components/EditableImageSlot'
+
+const HERO_PHOTO_DEFAULT = '/res/img/A7202824.webp'
 
 export default function Home() {
-  const { hero, teaser, serviceTeasers, closingCta } = content.home
+  const { hero, teaser, serviceTeasers, closingCta } = home
   return (
     <main>
       {/* Hero */}
       <section className="hero page-pad">
         <div className="hero-bg" />
         {/* Mobile only: full-bleed background */}
-        <div className="hero-photo-bg" aria-hidden="true" />
+        <EditableImageSlot id="home.heroBackground" defaultUrl={HERO_PHOTO_DEFAULT} mode="background" className="hero-photo-bg" />
         <div className="hero-inner">
-          <p className="eyebrow hero-eyebrow">{hero.eyebrow}</p>
-          <h1>{hero.headline}</h1>
-          <p className="hero-sub">{hero.subheadline}</p>
-          <Link to={hero.ctaTo} className="btn-primary">{hero.cta}</Link>
+          <Editable as="p" className="eyebrow hero-eyebrow" id="home.hero.eyebrow" defaultValue={hero.eyebrow} />
+          <Editable as="h1" id="home.hero.headline" defaultValue={hero.headline} />
+          <Editable as="p" className="hero-sub" id="home.hero.subheadline" defaultValue={hero.subheadline} multiline />
+          <EditableCtaLink to={homeLinks.heroCtaTo} className="btn-primary" id="home.hero.cta" defaultValue={hero.cta} />
         </div>
-        <div className="hero-photo-panel" aria-hidden="true" />
+        <EditableImageSlot id="home.heroBackground" defaultUrl={HERO_PHOTO_DEFAULT} mode="background" className="hero-photo-panel" />
       </section>
 
       <div className="page-pad">
         {/* Teaser */}
         <section className="home-teaser max-w-wide">
-          <p className="eyebrow home-teaser-label">{teaser.label}</p>
-          <h2>{teaser.headline}</h2>
-          <p>{teaser.body}</p>
+          <Editable as="p" className="eyebrow home-teaser-label" id="home.teaser.label" defaultValue={teaser.label} />
+          <Editable as="h2" id="home.teaser.headline" defaultValue={teaser.headline} />
+          <Editable as="p" id="home.teaser.body" defaultValue={teaser.body} multiline />
         </section>
 
         {/* Service teasers */}
         <div className="service-teasers max-w-wide">
-          {serviceTeasers.map(s => (
-            <div key={s.title} className="service-teaser-item">
-              <h3>{s.title}</h3>
-              <p>{s.blurb}</p>
+          {serviceTeasers.map((s, i) => (
+            <div key={i} className="service-teaser-item">
+              <Editable as="h3" id={`home.serviceTeasers.${i}.title`} defaultValue={s.title} />
+              <Editable as="p" id={`home.serviceTeasers.${i}.blurb`} defaultValue={s.blurb} multiline />
             </div>
           ))}
         </div>
@@ -41,9 +46,9 @@ export default function Home() {
       {/* Closing CTA */}
       <section className="home-closing">
         <div className="max-w">
-          <h2>{closingCta.headline}</h2>
-          <p>{closingCta.body}</p>
-          <Link to={closingCta.ctaTo} className="btn-primary">{closingCta.cta}</Link>
+          <Editable as="h2" id="home.closingCta.headline" defaultValue={closingCta.headline} />
+          <Editable as="p" id="home.closingCta.body" defaultValue={closingCta.body} multiline />
+          <EditableCtaLink to={homeLinks.closingCtaTo} className="btn-primary" id="home.closingCta.cta" defaultValue={closingCta.cta} />
         </div>
       </section>
     </main>

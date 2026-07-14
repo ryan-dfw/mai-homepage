@@ -1,4 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
+import { EditableProvider } from './editable/EditableContext'
+import { ImagesProvider } from './editable/ImagesContext'
+import { GalleryDataProvider } from './editable/GalleryDataContext'
+import { ControlsVisibilityProvider } from './editable/ControlsVisibilityContext'
 import Nav from './components/Nav'
 import ScrollToTop from './components/ScrollToTop'
 import Footer from './components/Footer'
@@ -11,18 +15,24 @@ import Schedule from './pages/Schedule'
 
 export default function App() {
   return (
-    <>
-      <ScrollToTop />
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/schedule" element={<Schedule />} />
-      </Routes>
-      <Footer />
-    </>
+    <ControlsVisibilityProvider>
+      <EditableProvider>
+        <ImagesProvider>
+          <GalleryDataProvider>
+            <ScrollToTop />
+            <Nav />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/schedule" element={<Schedule />} />
+            </Routes>
+            <Footer />
+          </GalleryDataProvider>
+        </ImagesProvider>
+      </EditableProvider>
+    </ControlsVisibilityProvider>
   )
 }

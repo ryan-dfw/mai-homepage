@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { content } from '../data/content'
+import { nav as navContent } from '../data/pages/nav'
+import { navLinks, navMenuLabels } from '../data/navLinks'
+import EditableCtaLink from './EditableCtaLink'
+import { useControlsVisible } from '../editable/ControlsVisibilityContext'
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const { visible: controlsVisible, toggle: toggleControls } = useControlsVisible()
 
   useEffect(() => {
     setOpen(false)
@@ -18,16 +22,28 @@ export default function Nav() {
   return (
     <>
       <header className="site-nav">
-        <Link to="/" className="nav-brand">Lorem Ipsum</Link>
+        <EditableCtaLink to="/" className="nav-brand" id="nav.brand" defaultValue={navContent.brand} />
         <nav className="nav-links" aria-label="Primary">
-          {content.nav.links.map(link => (
+          {navLinks.map(link => (
             <Link key={link.to} to={link.to}>{link.label}</Link>
           ))}
         </nav>
+        <span
+          role="button"
+          tabIndex={0}
+          className={`controls-toggle-btn${controlsVisible ? ' is-active' : ''}`}
+          aria-label={controlsVisible ? 'Hide editing controls' : 'Show editing controls'}
+          aria-pressed={controlsVisible}
+          onClick={toggleControls}
+          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleControls() } }}
+        >
+          <span className="controls-toggle-icon">{controlsVisible ? '👁️' : '🙈'}</span>
+        </span>
+
         <button
           className={`hamburger${open ? ' open' : ''}`}
           onClick={() => setOpen(o => !o)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? navMenuLabels.menuCloseLabel : navMenuLabels.menuOpenLabel}
         >
           <span />
           <span />
@@ -36,7 +52,7 @@ export default function Nav() {
       </header>
 
       <nav className={`nav-overlay${open ? ' open' : ''}`} aria-hidden={!open}>
-        {content.nav.links.map(link => (
+        {navLinks.map(link => (
           <Link key={link.to} to={link.to}>
             {link.label}
           </Link>

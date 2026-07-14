@@ -1,8 +1,13 @@
+import type { ReactNode } from 'react'
+import { useControlsVisible } from '../../editable/ControlsVisibilityContext'
+
 type Props = {
-  label: string
+  label: ReactNode
+  onDeleteCategory?: () => void
 }
 
-export default function GallerySectionHeader({ label }: Props) {
+export default function GallerySectionHeader({ label, onDeleteCategory }: Props) {
+  const { visible: controlsVisible } = useControlsVisible()
   return (
     <div style={{
       display: 'flex',
@@ -17,7 +22,21 @@ export default function GallerySectionHeader({ label }: Props) {
       fontFamily: 'var(--font-body)',
     }}>
       <span style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span>{label}</span>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+        {label}
+        {onDeleteCategory && controlsVisible && (
+          <span
+            role="button"
+            tabIndex={0}
+            className="gallery-category-delete"
+            aria-label="Delete category"
+            onClick={onDeleteCategory}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onDeleteCategory() } }}
+          >
+            ✕
+          </span>
+        )}
+      </span>
       <span style={{ flex: 1, height: 1, background: 'var(--border)' }} />
     </div>
   )

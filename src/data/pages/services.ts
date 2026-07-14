@@ -1,0 +1,34 @@
+// All text rendered on the Services page (src/pages/Services.tsx).
+export const services = {
+  headline: 'Lorem ipsum.',
+  subheadline: 'Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  items: [
+    {
+      title: 'Lorem ipsum',
+      duration: 'Lorem ipsum dolor',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+      note: 'Lorem ipsum dolor sit amet.',
+    },
+    {
+      title: 'Dolor sit amet',
+      duration: 'Lorem ipsum',
+      description:
+        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+      note: 'Lorem ipsum dolor sit amet consectetur.',
+    },
+    {
+      title: 'Consectetur',
+      duration: 'Lorem ipsum',
+      description:
+        'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
+      note: 'Lorem ipsum dolor sit amet adipiscing.',
+    },
+  ],
+  cta: {
+    headline: 'Lorem ipsum dolor sit amet?',
+    body: 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.',
+    cta: 'Submit an Inquiry',
+    ctaTo: '/contact',
+  },
+}
