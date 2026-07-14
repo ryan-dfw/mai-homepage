@@ -12,6 +12,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Gallery from './pages/Gallery'
 import Schedule from './pages/Schedule'
+import UnlockGate from './components/UnlockGate'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/schedule" element={<Schedule />} />
+              <Route path="/supersecretpassword" element={<UnlockGate />} />
             </Routes>
             <Footer />
           </GalleryDataProvider>

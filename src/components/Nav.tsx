@@ -8,7 +8,7 @@ import { useControlsVisible } from '../editable/ControlsVisibilityContext'
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
-  const { visible: controlsVisible, toggle: toggleControls } = useControlsVisible()
+  const { unlocked, visible: controlsVisible, toggle: toggleControls } = useControlsVisible()
 
   useEffect(() => {
     setOpen(false)
@@ -28,17 +28,19 @@ export default function Nav() {
             <Link key={link.to} to={link.to}>{link.label}</Link>
           ))}
         </nav>
-        <span
-          role="button"
-          tabIndex={0}
-          className={`controls-toggle-btn${controlsVisible ? ' is-active' : ''}`}
-          aria-label={controlsVisible ? 'Hide editing controls' : 'Show editing controls'}
-          aria-pressed={controlsVisible}
-          onClick={toggleControls}
-          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleControls() } }}
-        >
-          <span className="controls-toggle-icon">{controlsVisible ? '👁️' : '🙈'}</span>
-        </span>
+        {unlocked && (
+          <span
+            role="button"
+            tabIndex={0}
+            className={`controls-toggle-btn${controlsVisible ? ' is-active' : ''}`}
+            aria-label={controlsVisible ? 'Hide editing controls' : 'Show editing controls'}
+            aria-pressed={controlsVisible}
+            onClick={toggleControls}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleControls() } }}
+          >
+            <span className="controls-toggle-icon">{controlsVisible ? '👁️' : '🙈'}</span>
+          </span>
+        )}
 
         <button
           className={`hamburger${open ? ' open' : ''}`}
