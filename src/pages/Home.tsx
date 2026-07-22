@@ -3,11 +3,14 @@ import { homeLinks } from '../data/homeLinks'
 import Editable from '../components/Editable'
 import EditableCtaLink from '../components/EditableCtaLink'
 import EditableImageSlot from '../components/EditableImageSlot'
+import { useControlsVisible } from '../editable/ControlsVisibilityContext'
+import { withEditPrefix } from '../editable/editPrefix'
 
 const HERO_PHOTO_DEFAULT = '/res/img/A7202824.webp'
 
 export default function Home() {
   const { hero, teaser, serviceTeasers, closingCta } = home
+  const { unlocked } = useControlsVisible()
   return (
     <main>
       {/* Hero */}
@@ -19,7 +22,7 @@ export default function Home() {
           <Editable as="p" className="eyebrow hero-eyebrow" id="home.hero.eyebrow" defaultValue={hero.eyebrow} />
           <Editable as="h1" id="home.hero.headline" defaultValue={hero.headline} />
           <Editable as="p" className="hero-sub" id="home.hero.subheadline" defaultValue={hero.subheadline} multiline />
-          <EditableCtaLink to={homeLinks.heroCtaTo} className="btn-primary" id="home.hero.cta" defaultValue={hero.cta} />
+          <EditableCtaLink to={withEditPrefix(homeLinks.heroCtaTo, unlocked)} className="btn-primary" id="home.hero.cta" defaultValue={hero.cta} />
         </div>
         <EditableImageSlot id="home.heroBackground" defaultUrl={HERO_PHOTO_DEFAULT} mode="background" className="hero-photo-panel" />
       </section>
@@ -48,7 +51,7 @@ export default function Home() {
         <div className="max-w">
           <Editable as="h2" id="home.closingCta.headline" defaultValue={closingCta.headline} />
           <Editable as="p" id="home.closingCta.body" defaultValue={closingCta.body} multiline />
-          <EditableCtaLink to={homeLinks.closingCtaTo} className="btn-primary" id="home.closingCta.cta" defaultValue={closingCta.cta} />
+          <EditableCtaLink to={withEditPrefix(homeLinks.closingCtaTo, unlocked)} className="btn-primary" id="home.closingCta.cta" defaultValue={closingCta.cta} />
         </div>
       </section>
     </main>

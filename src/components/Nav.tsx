@@ -4,6 +4,7 @@ import { nav as navContent } from '../data/pages/nav'
 import { navLinks, navMenuLabels } from '../data/navLinks'
 import EditableCtaLink from './EditableCtaLink'
 import { useControlsVisible } from '../editable/ControlsVisibilityContext'
+import { withEditPrefix } from '../editable/editPrefix'
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
@@ -22,10 +23,10 @@ export default function Nav() {
   return (
     <>
       <header className="site-nav">
-        <EditableCtaLink to="/" className="nav-brand" id="nav.brand" defaultValue={navContent.brand} />
+        <EditableCtaLink to={withEditPrefix('/', unlocked)} className="nav-brand" id="nav.brand" defaultValue={navContent.brand} />
         <nav className="nav-links" aria-label="Primary">
           {navLinks.map(link => (
-            <Link key={link.to} to={link.to}>{link.label}</Link>
+            <Link key={link.to} to={withEditPrefix(link.to, unlocked)}>{link.label}</Link>
           ))}
         </nav>
         {unlocked && (
@@ -55,7 +56,7 @@ export default function Nav() {
 
       <nav className={`nav-overlay${open ? ' open' : ''}`} aria-hidden={!open}>
         {navLinks.map(link => (
-          <Link key={link.to} to={link.to}>
+          <Link key={link.to} to={withEditPrefix(link.to, unlocked)}>
             {link.label}
           </Link>
         ))}

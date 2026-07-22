@@ -1,9 +1,12 @@
 import { services } from '../data/pages/services'
 import Editable from '../components/Editable'
 import EditableCtaLink from '../components/EditableCtaLink'
+import { useControlsVisible } from '../editable/ControlsVisibilityContext'
+import { withEditPrefix } from '../editable/editPrefix'
 
 export default function Services() {
   const { headline, subheadline, items, cta } = services
+  const { unlocked } = useControlsVisible()
   return (
     <main className="page-pad">
       <header className="services-header max-w-wide">
@@ -24,7 +27,7 @@ export default function Services() {
         <div className="services-cta">
           <Editable as="h2" id="services.cta.headline" defaultValue={cta.headline} />
           <Editable as="p" id="services.cta.body" defaultValue={cta.body} multiline />
-          <EditableCtaLink to={cta.ctaTo} className="btn-primary" id="services.cta.cta" defaultValue={cta.cta} />
+          <EditableCtaLink to={withEditPrefix(cta.ctaTo, unlocked)} className="btn-primary" id="services.cta.cta" defaultValue={cta.cta} />
         </div>
       </div>
     </main>
